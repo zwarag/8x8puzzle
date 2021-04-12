@@ -11,7 +11,7 @@ def distance_to_goal(init: List[List[int]], goal: List[List[int]]):
     distances = [[[0] for i in range(rows)]
                  for j in range(columns)]
     # distances = np.zeros((3, 3), dtype=np.int64)
-    
+
     for i, array in enumerate(init):
         for j, number in enumerate(array):
             (row, column) = find_index(x=number, goal=goal)
