@@ -1,19 +1,12 @@
 import numpy as np
+from manhatten import calculateManhattenDistance
+from disposition import calculateDisposition
 
 
 def buildPositionMatrix(matrix):
     posMatrix = np.empty(nn, dtype=int)
     posMatrix[matrix.reshape(nn)] = np.arange(nn)
     return posMatrix
-
-
-def calculateManhattenDistance(matrix1, matrix2):
-    xInitPos, yInitPos = initPos % n, initPos//n
-    xGoalPos, yGoalPos = goalPos % n, goalPos//n
-    distancex = np.abs(xGoalPos-xInitPos)
-    distancey = np.abs(yGoalPos-yInitPos)
-    distance = distancex+distancey
-    return distance
 
 
 def findZero(matrix):
@@ -73,3 +66,6 @@ goalPos = buildPositionMatrix(goal_state)
 distance = calculateManhattenDistance(initPos, goalPos)  # heuristic 1
 
 solutions = permuatePlayableMoves(initial_state)
+disposition = calculateDisposition(initial_state, goal_state)
+
+print(disposition)
