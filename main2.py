@@ -58,6 +58,8 @@ if(initial_state.shape != goal_state.shape):
     print("initial and goal shape must be equal")
     exit(1)
 
+# TODO: assert that all numers between 0-9 exist in both matrixes
+
 n = 3
 nn = 9
 
