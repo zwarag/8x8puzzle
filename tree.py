@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Union
 from dataclasses import dataclass
 import numpy as np
+import numpy.typing as npt
 
 
 @dataclass
@@ -26,6 +27,9 @@ class Node():
 
     def below(self) -> Union[Node, None]:
         return self.childs[3]
+
+    def getNeighbours(self) -> ntp.array:
+        return np.array((self.right(), self.above(), self.left(), self.below()))
 
 
 if __name__ == '__main__':
@@ -64,3 +68,8 @@ if __name__ == '__main__':
     assert p.above().value == p.childs[1].value
     assert p.left().value == p.childs[2].value
     assert p.below().value == p.childs[3].value
+    neighbours = p.getNeighbours()
+    assert neighbours[0].value == p.right().value
+    assert neighbours[1].value == p.above().value
+    assert neighbours[2].value == p.left().value
+    assert neighbours[3].value == p.below().value
