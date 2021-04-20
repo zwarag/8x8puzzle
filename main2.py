@@ -1,64 +1,12 @@
 import numpy as np
 from manhatten import calculateManhattenDistance
-from disposition import calculateDisposition
+from disposition import calculateDispositionSum
 from tree import Node
 import helper
+from a_star import a_star
 
 
-def findZero(matrix):
-    flatMatrix = matrix.reshape(nn)
-    # 1. find the zero
-    zeroPosition = np.where(flatMatrix == 0)[0][0]
-    zeroPosition = [0, zeroPosition]
-    while zeroPosition[1] > n-1:
-        zeroPosition[1] = zeroPosition[1] - n
-        zeroPosition[0] += 1
-    return tuple(zeroPosition)
-
-
-def swapPlaces(matrix, zero, elem):
-    matrix[zero[0]][zero[1]] = matrix[elem[0]][elem[1]]
-    matrix[elem[0]][elem[1]] = 0
-    return matrix
-
-
-def permuatePlayableMoves(matrix):
-    solutions = []
-    # 1. find the zero
-    zeroPosition = findZero(matrix)
-    # 2. swap with a neighbour
-    # Right
-    if(zeroPosition[1] < n-1):
-        solutions.append(swapPlaces(np.copy(matrix), zeroPosition,
-                         tuple([zeroPosition[0], zeroPosition[1]+1])))
-    else:
-        solutions.append(None)
-
-    # Above
-    if(zeroPosition[0] > 0):
-        solutions.append(swapPlaces(np.copy(matrix), zeroPosition,
-                         tuple([zeroPosition[0]-1, zeroPosition[1]])))
-    else:
-        solutions.append(None)
-
-    # Left
-    if(zeroPosition[1] > 0):
-        solutions.append(swapPlaces(np.copy(matrix), zeroPosition,
-                         tuple([zeroPosition[0], zeroPosition[1]-1])))
-    else:
-        solutions.append(None)
-
-    # Below
-    if(zeroPosition[0] < n-1):
-        solutions.append(swapPlaces(np.copy(matrix), zeroPosition,
-                         tuple([zeroPosition[0]+1, zeroPosition[1]])))
-    else:
-        solutions.append(None)
-
-    return solutions
-
-
-initial_state = np.array([[7, 2, 4], [5, 3, 6], [8, 1, 0]])
+initial_state = np.array([[7, 2, 4], [5, 0, 6], [8, 3, 1]])
 
 goal_state = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
 
@@ -73,25 +21,16 @@ nn = 9
 root = Node(
     arr=initial_state,
     name="root",
-    cost=np.sum(calculateManhattenDistance(initial_state, goal_state)),
-    depth=0,
+    h=0,
+    g=0,
     parent=None
 )
+goal = Node(
+    arr=goal_state,
+    name="goal",
+    h=0,
+    g=0,
+)
 
-
-def breadthSearch(depth: int, maxDepth: int, node: Node, goal):
-    # end check if we have correct solution
-    # print(f"building for {node.name=} at {depth=}")
-    if(calculateDisposition(node.arr, goal_state) != 0 and depth < maxDepth):
-        possible_moves = permuatePlayableMoves(node.arr)
-        node.setChildren(node, possible_moves,
-                         calculateDisposition, goal_state)
-        depth += 1
-        for child in node.childs:
-            if child:
-                breadthSearch(depth, maxDepth, child, goal_state)
-
-
-breadthSearch(depth=0, maxDepth=13, node=root, goal=goal_state)
-
-helper.printTree(root)
+solution = a_star(root, goal, calculateManhattenDistance)
+print("found solution :)", solution.name, solution.g)
