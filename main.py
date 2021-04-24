@@ -1,43 +1,36 @@
-from typing import List
-
-initial_state = [[7, 2, 4], [5, None, 6], [8, 3, 1]]
-goal_state = [[None, 1, 2], [3, 4, 5], [6, 7, 8]]
-
-
-def distance_to_goal(init: List[List[int]], goal: List[List[int]]):
-    rows = len(init)
-    columns = len(init[0])
-
-    distances = [[[0] for i in range(rows)]
-                 for j in range(columns)]
-    # distances = np.zeros((3, 3), dtype=np.int64)
-
-    for i, array in enumerate(init):
-        for j, number in enumerate(array):
-            (row, column) = find_index(x=number, goal=goal)
-            distances[i][j] = abs(i - row) + abs(j - column)
-    return distances
+import numpy as np
+from manhatten import calculateManhattenDistance
+from disposition import calculateDispositionSum
+from tree import Node
+import helper
+from a_star import a_star
 
 
-def find_index(x: int, goal: List[List[int]]):
-    for row, i in enumerate(goal):
-        try:
-            column = i.index(x)
-        except ValueError:
-            continue
-        return row, column
-    return -1
+initial_state = np.array([[7, 2, 4], [5, 0, 6], [8, 3, 1]])
 
+goal_state = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
 
-distances1 = distance_to_goal(init=initial_state, goal=goal_state)
-print("Distance:")
-for distance in distances1:
-    print(distance)
+if(initial_state.shape != goal_state.shape):
+    print("initial and goal shape must be equal")
+    exit(1)
 
-print("Init:")
-for row in initial_state:
-    print(row)
+# TODO: assert that all numers between 0-9 exist in both matrixes
 
-print("Goal:")
-for row in goal_state:
-    print(row)
+n = 3
+nn = 9
+root = Node(
+    arr=initial_state,
+    name="root",
+    h=0,
+    g=0,
+    parent=None
+)
+goal = Node(
+    arr=goal_state,
+    name="goal",
+    h=0,
+    g=0,
+)
+
+solution = a_star(root, goal, calculateManhattenDistance)
+print("found solution :)", solution.name, solution.g)
